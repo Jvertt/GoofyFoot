@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function ProductList() {
+function ProductList (){
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -8,11 +8,11 @@ function ProductList() {
   }, []);
 
   return (
-    <div>
+    <div className="product-list">
       {products.map(product => (
-        <div key={product.id}>
-          <h2>{product.title}</h2>
-          <p>{product.description}</p>
+        <div key={product.id} className="product-item">
+          <h2 className="product-title">{product.title}</h2>
+          <p className="product-description">{product.description}</p>
           {/* TODO: Add link to ProductDetail component for each product */}
         </div>
       ))}
