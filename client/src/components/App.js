@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import ProductList from './ProductList';
 
 function App() {
-  hi
+  return (
+    <Router>
+      <Switch>
+        <Route path="/products" component={ProductList} exact />
+        {/* TODO: Add more routes as necessary */}
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;
