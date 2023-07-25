@@ -10,7 +10,7 @@ function App() {
     <Router>
       <NavBar />
       <Switch>
-       {/*<Route path="/login" component={Login} /> */}
+        <Route path="/login" component={Login} />
         <Route path="/products" component={ProductList} exact />
         <Route path="/products/:id" component={ProductDetail} />
         {/* TODO: Add more routes as necessary */}

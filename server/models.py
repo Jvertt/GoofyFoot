@@ -1,10 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from config import db
-from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
-
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -14,7 +11,7 @@ class User(db.Model):
     products = db.relationship('Product', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
 
-class Product(db.Model):
+class Product(db.Model, SerializerMixin):
     __tablename__ = "products"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +21,7 @@ class Product(db.Model):
 
     reviews = db.relationship('Review', secondary='product_review', backref='products')
 
-class Review(db.Model):
+class Review(db.Model, SerializerMixin):
     __tablename__ = "reviews"
 
     id = db.Column(db.Integer, primary_key=True)
