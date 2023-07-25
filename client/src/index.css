@@ -70,4 +70,29 @@ body {
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+
+  .card {
+    width: 18rem;
+    margin: 1rem;
+    /* Add more styles as needed */
+  }
+  
+  .card-img-top {
+    width: 100%;
+    height: auto;
+    /* Add more styles as needed */
+  }
+  
+  .card-title {
+    /* Add styles as needed */
+  }
+  
+  .card-text {
+    /* Add styles as needed */
+  }
+  
+  .btn {
+    /* Add styles as needed */
+  }
+  
   

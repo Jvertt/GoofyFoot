@@ -5,32 +5,48 @@ class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(200), nullable=False)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
 
-    products = db.relationship('Product', backref='user', lazy=True)
-    reviews = db.relationship('Review', backref='user', lazy=True)
+    lessons = db.relationship("Lesson", backref="coach", lazy=True)
+    sessions = db.relationship("Session", backref="coach", lazy=True)
 
-class Product(db.Model, SerializerMixin):
-    __tablename__ = "products"
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.String(500), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    reviews = db.relationship('Review', secondary='product_review', backref='product_reviews')
-
-class Review(db.Model, SerializerMixin):
-    __tablename__ = "reviews"
+class Lesson(db.Model, SerializerMixin):
+    __tablename__ = "lessons"
 
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(500), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    datetime = db.Column(db.DateTime, nullable=False)
 
-    reviewed_products = db.relationship('Product', secondary='product_review')
+    coach_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-product_review = db.Table('product_review',
-    db.Column('product_id', db.Integer, db.ForeignKey('products.id'), primary_key=True),
-    db.Column('review_id', db.Integer, db.ForeignKey('reviews.id'), primary_key=True)
+    sessions = db.relationship("Session", secondary="link", back_populates="lessons")
+    bookings = db.relationship("Booking", backref="lesson", lazy=True)
+
+class Session(db.Model, SerializerMixin):
+    __tablename__ = "sessions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    datetime = db.Column(db.DateTime, nullable=False)
+
+    coach_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    lessons = db.relationship("Lesson", secondary="link", back_populates="sessions")
+
+class Booking(db.Model, SerializerMixin):
+    __tablename__ = "bookings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
+
+    lesson = db.relationship("Lesson", backref="bookings")
+
+link = db.Table('link',
+    db.Column('session_id', db.Integer, db.ForeignKey('sessions.id'), primary_key=True),
+    db.Column('lesson_id', db.Integer, db.ForeignKey('lessons.id'), primary_key=True)
 )
