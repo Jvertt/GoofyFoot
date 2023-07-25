@@ -16,52 +16,154 @@ def index():
 
 class Users(Resource):
     def get(self):
-        users = [{"id" : user.id, 
-                  "name" : user.name, 
-                  "email" : user.email
-        } for user in User.query.all()]
-        response = make_response(users, 200)
-        return response
+        users = [user.to_dict() for user in User.query.all()]
+        return make_response(users, 200)
 
-api.add_resource(Users, "/users", endpoint = "users")
+    def post(self):
+        new_user = User(
+            name=request.json['name'],
+            email=request.json['email']
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return make_response(new_user.to_dict(), 201)
+
+    def put(self):
+        user_id = request.view_args['id']
+        user = User.query.get(user_id)
+        if user:
+            user.name = request.json.get('name', user.name)
+            user.email = request.json.get('email', user.email)
+            db.session.commit()
+            return make_response(user.to_dict(), 200)
+        return {"message": "User not found"}, 404
+
+    def delete(self):
+        user_id = request.view_args['id']
+        user = User.query.get(user_id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return {"message": f"User with id {user_id} deleted"}, 200
+        return {"message": "User not found"}, 404
+
+api.add_resource(Users, "/users", "/users/<int:id>", endpoint = "users")
+
 
 class Lessons(Resource):
     def get(self):
-        lessons = [{"id" : lesson.id, 
-                    "title" : lesson.title,
-                    "description" : lesson.description, 
-                    "datetime" : lesson.datetime.isoformat(),
-                    "coach_id" : lesson.coach_id
-        } for lesson in Lesson.query.all()]
-        response = make_response(lessons, 200)
-        return response
+        lessons = [lesson.to_dict() for lesson in Lesson.query.all()]
+        return make_response(lessons, 200)
 
-api.add_resource(Lessons, "/lessons", endpoint = "lessons")
+    def post(self):
+        new_lesson = Lesson(
+            title=request.json['title'],
+            description=request.json['description'],
+            datetime=request.json['datetime'],
+            coach_id=request.json['coach_id']
+        )
+        db.session.add(new_lesson)
+        db.session.commit()
+        return make_response(new_lesson.to_dict(), 201)
+
+    def put(self):
+        lesson_id = request.view_args['id']
+        lesson = Lesson.query.get(lesson_id)
+        if lesson:
+            lesson.title = request.json.get('title', lesson.title)
+            lesson.description = request.json.get('description', lesson.description)
+            lesson.datetime = request.json.get('datetime', lesson.datetime)
+            lesson.coach_id = request.json.get('coach_id', lesson.coach_id)
+            db.session.commit()
+            return make_response(lesson.to_dict(), 200)
+        return {"message": "Lesson not found"}, 404
+
+    def delete(self):
+        lesson_id = request.view_args['id']
+        lesson = Lesson.query.get(lesson_id)
+        if lesson:
+            db.session.delete(lesson)
+            db.session.commit()
+            return {"message": f"Lesson with id {lesson_id} deleted"}, 200
+        return {"message": "Lesson not found"}, 404
+
+api.add_resource(Lessons, "/lessons", "/lessons/<int:id>", endpoint = "lessons")
 
 class Sessions(Resource):
     def get(self):
-        sessions = [{"id" : session.id, 
-                     "title" : session.title,
-                     "description" : session.description, 
-                     "datetime" : session.datetime.isoformat(),
-                     "coach_id" : session.coach_id
-        } for session in Session.query.all()]
-        response = make_response(sessions, 200)
-        return response
+        sessions = [session.to_dict() for session in Session.query.all()]
+        return make_response(sessions, 200)
 
-api.add_resource(Sessions, "/sessions", endpoint = "sessions")
+    def post(self):
+        new_session = Session(
+            title=request.json['title'],
+            description=request.json['description'],
+            datetime=request.json['datetime'],
+            coach_id=request.json['coach_id']
+        )
+        db.session.add(new_session)
+        db.session.commit()
+        return make_response(new_session.to_dict(), 201)
+
+    def put(self):
+        session_id = request.view_args['id']
+        session = Session.query.get(session_id)
+        if session:
+            session.title = request.json.get('title', session.title)
+            session.description = request.json.get('description', session.description)
+            session.datetime = request.json.get('datetime', session.datetime)
+            session.coach_id = request.json.get('coach_id', session.coach_id)
+            db.session.commit()
+            return make_response(session.to_dict(), 200)
+        return {"message": "Session not found"}, 404
+
+    def delete(self):
+        session_id = request.view_args['id']
+        session = Session.query.get(session_id)
+        if session:
+            db.session.delete(session)
+            db.session.commit()
+            return {"message": f"Session with id {session_id} deleted"}, 200
+        return {"message": "Session not found"}, 404
+
+api.add_resource(Sessions, "/sessions", "/sessions/<int:id>", endpoint = "sessions")
 
 class Bookings(Resource):
     def get(self):
-        bookings = [{"id" : booking.id, 
-                     "name" : booking.name, 
-                     "email" : booking.email, 
-                     "lesson_id" : booking.lesson_id
-        } for booking in Booking.query.all()]
-        response = make_response(bookings, 200)
-        return response
+        bookings = [booking.to_dict() for booking in Booking.query.all()]
+        return make_response(bookings, 200)
 
-api.add_resource(Bookings, "/bookings", endpoint = "bookings")
+    def post(self):
+        new_booking = Booking(
+            name=request.json['name'],
+            email=request.json['email'],
+            lesson_id=request.json['lesson_id']
+        )
+        db.session.add(new_booking)
+        db.session.commit()
+        return make_response(new_booking.to_dict(), 201)
+
+    def put(self):
+        booking_id = request.view_args['id']
+        booking = Booking.query.get(booking_id)
+        if booking:
+            booking.name = request.json.get('name', booking.name)
+            booking.email = request.json.get('email', booking.email)
+            booking.lesson_id = request.json.get('lesson_id', booking.lesson_id)
+            db.session.commit()
+            return make_response(booking.to_dict(), 200)
+        return {"message": "Booking not found"}, 404
+
+    def delete(self):
+        booking_id = request.view_args['id']
+        booking = Booking.query.get(booking_id)
+        if booking:
+            db.session.delete(booking)
+            db.session.commit()
+            return {"message": f"Booking with id {booking_id} deleted"}, 200
+        return {"message": "Booking not found"}, 404
+
+api.add_resource(Bookings, "/bookings", "/bookings/<int:id>", endpoint = "bookings")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

@@ -11,6 +11,8 @@ class User(db.Model, SerializerMixin):
     lessons = db.relationship("Lesson", backref="coach", lazy=True)
     sessions = db.relationship("Session", backref="coach", lazy=True)
 
+    serialize_only = ('id', 'name', 'email')
+
 class Lesson(db.Model, SerializerMixin):
     __tablename__ = "lessons"
 
@@ -22,7 +24,9 @@ class Lesson(db.Model, SerializerMixin):
     coach_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     sessions = db.relationship("Session", secondary="link", back_populates="lessons")
-    bookings = db.relationship("Booking", backref="lesson", lazy=True)
+    bookings = db.relationship("Booking", backref="booked_lesson", lazy=True)
+
+    serialize_only = ('id', 'title', 'description', 'datetime', 'coach_id')
 
 class Session(db.Model, SerializerMixin):
     __tablename__ = "sessions"
@@ -36,6 +40,8 @@ class Session(db.Model, SerializerMixin):
 
     lessons = db.relationship("Lesson", secondary="link", back_populates="sessions")
 
+    serialize_only = ('id', 'title', 'description', 'datetime', 'coach_id')
+
 class Booking(db.Model, SerializerMixin):
     __tablename__ = "bookings"
 
@@ -44,7 +50,9 @@ class Booking(db.Model, SerializerMixin):
     email = db.Column(db.String, nullable=False)
     lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
 
-    lesson = db.relationship("Lesson", backref="bookings")
+    lesson = db.relationship("Lesson", backref="bookings_in_lesson")
+
+    serialize_only = ('id', 'name', 'email', 'lesson_id')
 
 link = db.Table('link',
     db.Column('session_id', db.Integer, db.ForeignKey('sessions.id'), primary_key=True),
