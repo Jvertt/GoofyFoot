@@ -19,7 +19,7 @@ class Product(db.Model, SerializerMixin):
     description = db.Column(db.String(500), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    reviews = db.relationship('Review', secondary='product_review', backref='products')
+    reviews = db.relationship('Review', secondary='product_review', backref='product_reviews')
 
 class Review(db.Model, SerializerMixin):
     __tablename__ = "reviews"
@@ -28,7 +28,7 @@ class Review(db.Model, SerializerMixin):
     content = db.Column(db.String(500), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    products = db.relationship('Product', secondary='product_review', backref='reviews')
+    reviewed_products = db.relationship('Product', secondary='product_review')
 
 product_review = db.Table('product_review',
     db.Column('product_id', db.Integer, db.ForeignKey('products.id'), primary_key=True),
