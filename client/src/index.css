@@ -1,76 +1,238 @@
 /* index.css */
 
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #fdf8ec; /* Sandy beige background color */
+  margin: 0;
+  padding: 0;
+}
+
 /* Navbar */
+
 .navbar {
-  background-color: #333;
-  padding: 10px;
   display: flex;
-  justify-content: space-around;
+  background-color: #4169e1; /* Royal blue background color */
+  padding: 10px;
+  justify-content: center;
 }
 
 .navbar-link {
-  color: #fff;
+  color: #fff; /* White text color */
   text-decoration: none;
+  font-size: 20px;
   margin: 0 10px;
 }
 
-.navbar-link:hover {
-  color: #ff4500; /* change to your preferred hover color */
-}
+/* Home Component */
 
-/* Home */
 .home {
   text-align: center;
   margin-top: 30px;
 }
 
 .home h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
+  font-size: 48px;
+  color: #ff4500; /* Orange-red text color */
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Text shadow effect */
 }
 
 .home p {
-  font-size: 18px;
+  font-size: 24px;
+  color: #008000; /* Dark green text color */
 }
 
-/* Lessons */
+/* Lessons Component */
+
 .lessons {
-  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+  padding: 30px;
 }
 
 .lesson-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  background-color: #f9f9f9;
+  background-color: #ff6347; /* Tomato red background color */
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff; /* White text color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+  transition: transform 0.2s ease-in-out;
+}
+
+.lesson-card:hover {
+  transform: translateY(-5px); /* Hover effect */
 }
 
 .lesson-card h2 {
   font-size: 24px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .lesson-card p {
   font-size: 16px;
+  margin-bottom: 20px;
 }
 
-/* Coaching */
+.lesson-card a {
+  display: block;
+  background-color: #ffa500; /* Orange background color */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff; /* White text color */
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow effect */
+}
+
+.lesson-card a:hover {
+  background-color: #f08080; /* Light coral background color */
+}
+
+/* Lesson Details Component */
+
+.lesson-details {
+  text-align: center;
+  margin: 30px;
+}
+
+.lesson-details h2 {
+  font-size: 32px;
+  color: #20b2aa; /* Light sea green text color */
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow effect */
+}
+
+.lesson-details p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.lesson-details form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lesson-details label {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #4169e1; /* Royal blue text color */
+}
+
+.lesson-details input {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #4169e1; /* Royal blue border color */
+}
+
+.lesson-details button {
+  background-color: #4169e1; /* Royal blue background color */
+  color: #fff; /* White text color */
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow effect */
+}
+
+.lesson-details button:hover {
+  background-color: #0000cd; /* Medium blue background color */
+}
+
+/* Coaching Component */
+
 .coaching {
-  margin-top: 30px;
+  text-align: center;
+  margin: 30px;
 }
 
 .coach-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  background-color: #f9f9f9;
+  background-color: #ffa07a; /* Light salmon background color */
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff; /* White text color */
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+  transition: transform 0.2s ease-in-out;
+}
+
+.coach-card:hover {
+  transform: translateY(-5px); /* Hover effect */
 }
 
 .coach-card h2 {
   font-size: 24px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .coach-card p {
   font-size: 16px;
+}
+
+/* Responsive Styles */
+
+@media (max-width: 768px) {
+  .lessons {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 15px;
+  }
+
+  .lesson-details input {
+    width: 100%;
+  }
+}
+
+
+
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.confirmation-popup {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 80%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.confirmation-popup h3 {
+  color: #4169e1;
+  margin-bottom: 10px;
+}
+
+.confirmation-popup p {
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.confirmation-popup button {
+  background-color: #4169e1;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirmation-popup button:hover {
+  background-color: #0000cd;
 }
