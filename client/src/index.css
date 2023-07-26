@@ -2,7 +2,7 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #fdf8ec; /* Sandy beige background color */
+  background-color: #f5f5f5; /* Light gray background color */
   margin: 0;
   padding: 0;
 }
@@ -11,7 +11,7 @@ body {
 
 .navbar {
   display: flex;
-  background-color: #4169e1; /* Royal blue background color */
+  background-color: #007bff; /* Vivid blue background color */
   padding: 10px;
   justify-content: center;
 }
@@ -19,8 +19,8 @@ body {
 .navbar-link {
   color: #fff; /* White text color */
   text-decoration: none;
-  font-size: 20px;
-  margin: 0 10px;
+  font-size: 18px;
+  margin: 0 15px;
 }
 
 /* Home Component */
@@ -31,14 +31,14 @@ body {
 }
 
 .home h1 {
-  font-size: 48px;
+  font-size: 36px;
   color: #ff4500; /* Orange-red text color */
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Text shadow effect */
 }
 
 .home p {
-  font-size: 24px;
+  font-size: 20px;
   color: #008000; /* Dark green text color */
 }
 
@@ -75,10 +75,9 @@ body {
 }
 
 .lesson-card a {
-  display: block;
+  display: inline-block;
   background-color: #ffa500; /* Orange background color */
   padding: 10px 20px;
-  text-align: center;
   text-decoration: none;
   color: #fff; /* White text color */
   border-radius: 5px;
@@ -98,7 +97,7 @@ body {
 }
 
 .lesson-details h2 {
-  font-size: 32px;
+  font-size: 28px;
   color: #20b2aa; /* Light sea green text color */
   margin-bottom: 20px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow effect */
@@ -118,19 +117,20 @@ body {
 .lesson-details label {
   font-size: 18px;
   margin-bottom: 5px;
-  color: #4169e1; /* Royal blue text color */
+  color: #007bff; /* Vivid blue text color */
 }
 
 .lesson-details input {
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   padding: 10px;
   margin-bottom: 15px;
   border-radius: 5px;
-  border: 1px solid #4169e1; /* Royal blue border color */
+  border: 1px solid #007bff; /* Vivid blue border color */
 }
 
 .lesson-details button {
-  background-color: #4169e1; /* Royal blue background color */
+  background-color: #007bff; /* Vivid blue background color */
   color: #fff; /* White text color */
   border: none;
   padding: 10px 20px;
@@ -142,7 +142,7 @@ body {
 }
 
 .lesson-details button:hover {
-  background-color: #0000cd; /* Medium blue background color */
+  background-color: #0056b3; /* Slightly darker blue background color on hover */
 }
 
 /* Coaching Component */
@@ -185,10 +185,11 @@ body {
 
   .lesson-details input {
     width: 100%;
+    max-width: 100%;
   }
 }
 
-
+/* Confirmation Overlay */
 
 .confirmation-overlay {
   position: fixed;
@@ -212,18 +213,18 @@ body {
 }
 
 .confirmation-popup h3 {
-  color: #4169e1;
+  color: #007bff; /* Vivid blue text color */
   margin-bottom: 10px;
 }
 
 .confirmation-popup p {
-  color: #000;
+  color: #000; /* Black text color */
   margin-bottom: 5px;
 }
 
 .confirmation-popup button {
-  background-color: #4169e1;
-  color: #fff;
+  background-color: #007bff; /* Vivid blue background color */
+  color: #fff; /* White text color */
   border: none;
   padding: 10px 20px;
   margin: 10px 5px;
@@ -234,5 +235,56 @@ body {
 }
 
 .confirmation-popup button:hover {
-  background-color: #0000cd;
+  background-color: #0056b3; /* Slightly darker blue background color on hover */
+}
+
+/* ManageBookings Component */
+
+.manage-bookings-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.manage-bookings-container input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #007bff; /* Vivid blue border color */
+}
+
+.booking-item {
+  background-color: #ff6347; /* Tomato red background color */
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff; /* White text color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+  transition: transform 0.2s ease-in-out;
+  margin-bottom: 20px;
+}
+
+.booking-item:hover {
+  transform: translateY(-5px); /* Hover effect */
+}
+
+.booking-item p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.booking-item button {
+  background-color: #ffa500; /* Orange background color */
+  color: #fff; /* White text color */
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow effect */
+}
+
+.booking-item button:hover {
+  background-color: #f08080; /* Light coral background color */
 }

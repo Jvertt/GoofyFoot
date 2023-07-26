@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../index.css'
 
-function ManageBookings () {
+function ManageBookings() {
   const [bookings, setBookings] = useState([]);
   const [name, setName] = useState('');
 
@@ -31,18 +32,18 @@ function ManageBookings () {
       .catch(error => {
         console.error(error);
       });
-};
+  };
 
   const filteredBookings = bookings.filter(booking => booking.name.toLowerCase() === name.toLowerCase());
 
   return (
-    <div>
-      <input type="text" placeholder="Enter your name" value={name} onChange={e => setName(e.target.value)} />
+    <div className="manage-bookings-container">
+      <input className="name-input" type="text" placeholder="Enter your name" value={name} onChange={e => setName(e.target.value)} />
       {filteredBookings.map(booking => (
-        <div key={booking.id}>
-          <p>{booking.name}</p>
-          <p>{booking.email}</p>
-          <button onClick={() => cancelBooking(booking.id)}>Cancel Booking</button>
+        <div key={booking.id} className="booking-item">
+          <p className="booking-name">{booking.name}</p>
+          <p className="booking-email">{booking.email}</p>
+          <button className="cancel-button" onClick={() => cancelBooking(booking.id)}>Cancel Booking</button>
         </div>
       ))}
     </div>
