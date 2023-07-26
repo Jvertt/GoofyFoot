@@ -38,13 +38,12 @@ class Users(Resource):
             return make_response(user.to_dict(), 200)
         return {"message": "User not found"}, 404
 
-    def delete(self):
-        user_id = request.view_args['id']
-        user = User.query.get(user_id)
+    def delete(self, id):
+        user = User.query.get(id)
         if user:
             db.session.delete(user)
             db.session.commit()
-            return {"message": f"User with id {user_id} deleted"}, 200
+            return {"message": f"User with id {id} deleted"}, 200
         return {"message": "User not found"}, 404
 
 api.add_resource(Users, "/users", "/users/<int:id>", endpoint = "users")
@@ -78,13 +77,12 @@ class Lessons(Resource):
             return make_response(lesson.to_dict(), 200)
         return {"message": "Lesson not found"}, 404
 
-    def delete(self):
-        lesson_id = request.view_args['id']
-        lesson = Lesson.query.get(lesson_id)
+    def delete(self, id):
+        lesson = Lesson.query.get(id)
         if lesson:
             db.session.delete(lesson)
             db.session.commit()
-            return {"message": f"Lesson with id {lesson_id} deleted"}, 200
+            return {"message": f"Lesson with id {id} deleted"}, 200
         return {"message": "Lesson not found"}, 404
 
 api.add_resource(Lessons, "/lessons", "/lessons/<int:id>", endpoint = "lessons")
@@ -107,15 +105,13 @@ class Sessions(Resource):
 
     def put(self):
         session_id = request.view_args['id']
-        session = Session.query.get(session_id)
-        if session:
-            session.title = request.json.get('title', session.title)
-            session.description = request.json.get('description', session.description)
-            session.datetime = request.json.get('datetime', session.datetime)
-            session.coach_id = request.json.get('coach_id', session.coach_id)
-            db.session.commit()
-            return make_response(session.to_dict(), 200)
-        return {"message": "Session not found"}, 404
+        def delete(self, id):
+            session = Session.query.get(id)
+            if session:
+                db.session.delete(session)
+                db.session.commit()
+                return {"message": f"Session with id {id} deleted"}, 200
+            return {"message": "Session not found"}, 404
 
     def delete(self):
         session_id = request.view_args['id']
@@ -154,13 +150,12 @@ class Bookings(Resource):
             return make_response(booking.to_dict(), 200)
         return {"message": "Booking not found"}, 404
 
-    def delete(self):
-        booking_id = request.view_args['id']
-        booking = Booking.query.get(booking_id)
+    def delete(self, id):
+        booking = Booking.query.get(id)
         if booking:
             db.session.delete(booking)
             db.session.commit()
-            return {"message": f"Booking with id {booking_id} deleted"}, 200
+            return {"message": f"Booking with id {id} deleted"}, 200
         return {"message": "Booking not found"}, 404
 
 api.add_resource(Bookings, "/bookings", "/bookings/<int:id>", endpoint = "bookings")

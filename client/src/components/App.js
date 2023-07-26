@@ -4,6 +4,7 @@ import Lessons from './Lessons';
 import LessonDetails from './LessonDetails';
 import Home from './Home'
 import Coaching from './Coaching'
+import ManageBookings from './ManageBookings';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           <Link to="/" className="navbar-link">Home</Link>
           <Link to="/lessons" className="navbar-link">Lessons</Link>
           <Link to="/coaching" className="navbar-link">Coaching</Link>
+          <Link to="/manage-bookings" className="navbar-link">Bookings</Link>
         </nav>
 
         {/* Main content */}
@@ -64,6 +66,9 @@ function App() {
           {/* Coaching page */}
           <Route path="/coaching">
             <Coaching />
+          </Route>
+          <Route path="/manage-bookings">
+            <ManageBookings />
           </Route>
         </Switch>
       </div>
