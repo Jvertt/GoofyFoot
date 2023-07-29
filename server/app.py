@@ -5,7 +5,7 @@
 # Remote library imports
 from flask import request, make_response
 from flask_restful import Resource
-from models import User, Lesson, Session, Booking
+from models import User, Lesson, Booking
 
 # Local imports
 from config import app, db, api
@@ -46,8 +46,7 @@ class Users(Resource):
             return {"message": f"User with id {id} deleted"}, 200
         return {"message": "User not found"}, 404
 
-api.add_resource(Users, "/users", "/users/<int:id>", endpoint = "users")
-
+api.add_resource(Users, "/users", "/users/<int:id>", endpoint="users")
 
 class Lessons(Resource):
     def get(self):
@@ -85,44 +84,7 @@ class Lessons(Resource):
             return {"message": f"Lesson with id {id} deleted"}, 200
         return {"message": "Lesson not found"}, 404
 
-api.add_resource(Lessons, "/lessons", "/lessons/<int:id>", endpoint = "lessons")
-
-class Sessions(Resource):
-    def get(self):
-        sessions = [session.to_dict() for session in Session.query.all()]
-        return make_response(sessions, 200)
-
-    def post(self):
-        new_session = Session(
-            title=request.json['title'],
-            description=request.json['description'],
-            datetime=request.json['datetime'],
-            coach_id=request.json['coach_id']
-        )
-        db.session.add(new_session)
-        db.session.commit()
-        return make_response(new_session.to_dict(), 201)
-
-    def put(self):
-        session_id = request.view_args['id']
-        def delete(self, id):
-            session = Session.query.get(id)
-            if session:
-                db.session.delete(session)
-                db.session.commit()
-                return {"message": f"Session with id {id} deleted"}, 200
-            return {"message": "Session not found"}, 404
-
-    def delete(self):
-        session_id = request.view_args['id']
-        session = Session.query.get(session_id)
-        if session:
-            db.session.delete(session)
-            db.session.commit()
-            return {"message": f"Session with id {session_id} deleted"}, 200
-        return {"message": "Session not found"}, 404
-
-api.add_resource(Sessions, "/sessions", "/sessions/<int:id>", endpoint = "sessions")
+api.add_resource(Lessons, "/lessons", "/lessons/<int:id>", endpoint="lessons")
 
 class Bookings(Resource):
     def get(self):
@@ -158,7 +120,7 @@ class Bookings(Resource):
             return {"message": f"Booking with id {id} deleted"}, 200
         return {"message": "Booking not found"}, 404
 
-api.add_resource(Bookings, "/bookings", "/bookings/<int:id>", endpoint = "bookings")
+api.add_resource(Bookings, "/bookings", "/bookings/<int:id>", endpoint="bookings")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

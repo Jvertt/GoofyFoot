@@ -1,5 +1,5 @@
-from app import db, app  # Import the Flask application instance directly
-from models import User, Lesson, Session, Booking
+from app import db, app
+from models import User, Lesson, Booking
 from faker import Faker
 from sqlalchemy.exc import IntegrityError
 import random
@@ -22,28 +22,24 @@ with app.app_context():
 
     # Generate 50 lessons
     for _ in range(50):
-        lesson = Lesson(title=fake.catch_phrase(), 
-                        description=fake.text(), 
-                        datetime=fake.future_datetime(end_date="+30d"), 
-                        coach_id=random.choice(users).id)
+        lesson = Lesson(
+            title=fake.catch_phrase(),
+            description=fake.text(),
+            datetime=fake.future_datetime(end_date="+30d"),
+            coach_id=random.choice(users).id
+        )
         db.session.add(lesson)
     db.session.commit()
 
     # Get all lessons
     lessons = Lesson.query.all()
 
-    # Generate 50 sessions
-    for _ in range(50):
-        session = Session(title=fake.catch_phrase(), 
-                          description=fake.text(), 
-                          datetime=fake.future_datetime(end_date="+30d"), 
-                          coach_id=random.choice(users).id)
-        db.session.add(session)
-    db.session.commit()
-
     # Generate 200 bookings
     for _ in range(200):
-        booking = Booking(student_id=random.choice(users).id, 
-                          lesson_id=random.choice(lessons).id)
+        booking = Booking(
+            name=fake.unique.name(),
+            email=fake.unique.email(),
+            lesson_id=random.choice(lessons).id
+        )
         db.session.add(booking)
     db.session.commit()
