@@ -31,22 +31,32 @@ const LessonDetails = ({ lessons }) => {
     return <div>Loading...</div>;
   }
 
+  console.log(selectedCoach)
+
   const handleFormSubmit = async () => {
     try {
+      // Log the data being sent in the request for debugging
+      console.log({
+        name,
+        email,
+        lesson_id: lesson.id,
+        coach_id: selectedCoach,
+      });
+  
       const response = await axios.post('http://127.0.0.1:5555/bookings', {
         name,
         email,
         lesson_id: lesson.id,
         coach_id: selectedCoach,
       });
-
+  
       // handle response as needed
       console.log(response.data);
-
+  
       // Reset the input fields after successful submission
       setName('');
       setEmail('');
-
+  
       // redirect to home
       history.push('/');
     } catch (error) {
@@ -54,6 +64,7 @@ const LessonDetails = ({ lessons }) => {
       console.error(error);
     }
   };
+  
 
   return (
     <div className="lesson-details">
