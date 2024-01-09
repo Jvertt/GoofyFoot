@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -6,107 +6,117 @@ import * as Yup from 'yup';
 import '../index.css';
 
 function ManageBookings() {
-  const history = useHistory();
+    const history = useHistory();
+    const [bookings, setBookings] = useState([]);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [bookingToEdit, setBookingToEdit] = useState(null);
+    const [bookingToCancel, setBookingToCancel] = useState(null);
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-  });
+    const fetchBookings = () => {
+        axios.get('http://127.0.0.1:5555/bookings')
+            .then(response => setBookings(response.data))
+            .catch(error => console.error('Error fetching bookings:', error));
+    }
 
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-    },
-    validationSchema: validationSchema,
-    onSubmit: async values => {
-      // Handle form submission here
-      console.log(values);
+    useEffect(() => {
+        fetchBookings();
+    }, []);
 
-      // Clear the input field after successful submission
-      formik.resetForm();
-    },
-  });
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            email: '', // Include other fields as necessary
+            // ...
+        },
+        validationSchema: Yup.object({
+            name: Yup.string().required('Name is required'),
+            email: Yup.string().email('Invalid email address').required('Email is required'),
+            // ... (validation for other fields)
+        }),
+        onSubmit: (values, { setSubmitting }) => {
+            axios.put(`http://127.0.0.1:5555/bookings/${bookingToEdit.id}`, values)
+                .then(() => {
+                    fetchBookings();
+                    setBookingToEdit(null);
+                })
+                .catch(error => {
+                    console.error('Error updating booking:', error);
+                    alert('Failed to update booking'); // Or use a more sophisticated method of reporting the error to the user
+                })
+                .finally(() => setSubmitting(false));
+        },
+    });
 
-  const [bookings, setBookings] = React.useState([]);
-  const [showConfirmation, setShowConfirmation] = React.useState(false);
-  const [bookingToCancel, setBookingToCancel] = React.useState(null);
+    const startEditBooking = (booking) => {
+        setBookingToEdit(booking);
+        formik.setValues({ name: booking.name, email: booking.email });
+    };
 
-  const fetchBookings = () => {
-    axios.get('http://127.0.0.1:5555/bookings')
-      .then(response => {
-        setBookings(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
+    const cancelBooking = (id) => {
+        const booking = bookings.find(b => b.id === id);
+        setBookingToCancel(booking);
+        setShowConfirmation(true);
+    };
 
-  React.useEffect(() => {
-    fetchBookings();
-  }, []);
+    const handleConfirmation = () => {
+        axios.delete(`http://127.0.0.1:5555/bookings/${bookingToCancel.id}`)
+            .then(() => {
+                fetchBookings();
+                setShowConfirmation(false);
+                history.push('/');
+            })
+            .catch(error => {
+                console.error('Error deleting booking:', error);
+                setShowConfirmation(false);
+            });
+    };
 
-  const cancelBooking = (id) => {
-    const booking = bookings.find(booking => booking.id === id);
-    setBookingToCancel(booking);
-    setShowConfirmation(true);
-  };
+    return (
+        <div className="manage-bookings-container">
+            {bookingToEdit ? (
+                <form onSubmit={formik.handleSubmit}>
+                    <input
+                        type="text"
+                        name="name"
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                    />
+                    {/* Include other fields as necessary */}
+                    <button type="submit">Save Changes</button>
+                    <button onClick={() => setBookingToEdit(null)}>Cancel</button>
+                </form>
+            ) : (
+                bookings.map(booking => (
+                    <div key={booking.id} className="booking-item">
+                        <p className="booking-name">{booking.name}</p>
+                        <p className="booking-email">{booking.email}</p>
+                        {/* Display other booking details as necessary */}
+                        <button onClick={() => startEditBooking(booking)}>Edit Booking</button>
+                        <button onClick={() => cancelBooking(booking.id)}>Cancel Booking</button>
+                    </div>
+                ))
+            )}
 
-  const handleConfirmation = () => {
-    axios.delete(`http://127.0.0.1:5555/bookings/${bookingToCancel.id}`)
-      .then(() => {
-        // Fetch the bookings from the server again after the deletion.
-        return axios.get('http://127.0.0.1:5555/bookings');
-      })
-      .then(response => {
-        setBookings(response.data);
-        setShowConfirmation(false);
-        history.push('/');
-      })
-      .catch(error => {
-        console.error(error);
-        setShowConfirmation(false);
-      });
-  };
-
-  const filteredBookings = bookings.filter(booking => booking.name.toLowerCase() === formik.values.name.toLowerCase());
-
-  return (
-    <div className="manage-bookings-container">
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          className="name-input"
-          type="text"
-          placeholder="Enter your name"
-          name="name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        {formik.touched.name && formik.errors.name && <div className="error">{formik.errors.name}</div>}
-
-        {filteredBookings.map(booking => (
-          <div key={booking.id} className="booking-item">
-            <p className="booking-name">{booking.name}</p>
-            <p className="booking-email">{booking.email}</p>
-            <button className="cancel-button" onClick={() => cancelBooking(booking.id)}>Cancel Booking</button>
-          </div>
-        ))}
-
-        {showConfirmation && bookingToCancel && (
-          <div className="confirmation-overlay">
-            <div className="confirmation-popup">
-              <h3>Confirm Booking Cancellation</h3>
-              <p>Please confirm the cancellation of the booking:</p>
-              <p>Name: {bookingToCancel.name}</p>
-              <p>Email: {bookingToCancel.email}</p>
-              <button onClick={handleConfirmation}>Confirm</button>
-              <button onClick={() => setShowConfirmation(false)}>Cancel</button>
-            </div>
-          </div>
-        )}
-
-      </form>
-    </div>
-  );
+            {showConfirmation && bookingToCancel && (
+                <div className="confirmation-overlay">
+                    <div className="confirmation-popup">
+                        <h3>Confirm Booking Cancellation</h3>
+                        <p>Please confirm the cancellation of the booking:</p>
+                        <p>Name: {bookingToCancel.name}</p>
+                        <p>Email: {bookingToCancel.email}</p>
+                        <button onClick={handleConfirmation}>Confirm</button>
+                        <button onClick={() => setShowConfirmation(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default ManageBookings;

@@ -3,7 +3,7 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, make_response
+from flask import request, make_response, jsonify
 from flask_restful import Resource
 from models import User, Lesson, Booking
 
@@ -101,16 +101,22 @@ class Bookings(Resource):
         db.session.commit()
         return make_response(new_booking.to_dict(), 201)
 
-    def put(self):
-        booking_id = request.view_args['id']
-        booking = Booking.query.get(booking_id)
-        if booking:
-            booking.name = request.json.get('name', booking.name)
-            booking.email = request.json.get('email', booking.email)
-            booking.lesson_id = request.json.get('lesson_id', booking.lesson_id)
+    def put(self, id):
+        try:
+            booking = Booking.query.get(id)
+            if not booking:
+                return make_response(jsonify({"message": "Booking not found"}), 404)
+
+            data = request.get_json()
+            booking.name = data.get('name', booking.name)
+            booking.email = data.get('email', booking.email)
+            booking.lesson_id = data.get('lesson_id', booking.lesson_id)
             db.session.commit()
-            return make_response(booking.to_dict(), 200)
-        return {"message": "Booking not found"}, 404
+            return make_response(jsonify(booking.to_dict()), 200)
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f'Error updating booking: {e}')
+            return make_response(jsonify({"message": "Error updating booking", "error": str(e)}), 500)
 
     def delete(self, id):
         booking = Booking.query.get(id)
