@@ -25,13 +25,12 @@ function ManageBookings() {
     const formik = useFormik({
         initialValues: {
             name: '',
-            email: '', // Include other fields as necessary
-            // ...
+            email: '',
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
             email: Yup.string().email('Invalid email address').required('Email is required'),
-            // ... (validation for other fields)
+            
         }),
         onSubmit: (values, { setSubmitting }) => {
             axios.put(`http://127.0.0.1:5555/bookings/${bookingToEdit.id}`, values)
@@ -41,7 +40,7 @@ function ManageBookings() {
                 })
                 .catch(error => {
                     console.error('Error updating booking:', error);
-                    alert('Failed to update booking'); // Or use a more sophisticated method of reporting the error to the user
+                    alert('Failed to update booking');
                 })
                 .finally(() => setSubmitting(false));
         },
@@ -96,9 +95,8 @@ function ManageBookings() {
                     <div key={booking.id} className="booking-item">
                         <p className="booking-name">{booking.name}</p>
                         <p className="booking-email">{booking.email}</p>
-                        {/* Display other booking details as necessary */}
-                        <button onClick={() => startEditBooking(booking)}>Edit Booking</button>
-                        <button onClick={() => cancelBooking(booking.id)}>Cancel Booking</button>
+                        <button className="edit-booking" onClick={() => startEditBooking(booking)}>Edit Booking</button>
+                        <button className="cancel-booking" onClick={() => cancelBooking(booking.id)}>Cancel Booking</button>
                     </div>
                 ))
             )}

@@ -261,7 +261,7 @@ body {
   color: #fff; /* White text color */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow effect */
   transition: transform 0.2s ease-in-out;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .booking-item:hover {
@@ -277,13 +277,15 @@ body {
   background-color: #ffa500; /* Orange background color */
   color: #fff; /* White text color */
   border: none;
-  padding: 10px 20px;
+  padding: 10px 25px;
   font-size: 18px;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow effect */
+  margin: 10px; /* Adds space around each button */
 }
+
 
 .booking-item button:hover {
   background-color: #f08080; /* Light coral background color */
