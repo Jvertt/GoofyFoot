@@ -10,9 +10,8 @@ class User(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    lessons = db.relationship("Lesson", backref="coach", lazy=True)
-
-    # Many-to-many relationship using the 'enrollment' table
+    bookings = db.relationship("Booking", back_populates="user")
+    lessons = db.relationship("Lesson", secondary="bookings",back_populates="users", lazy=True)
 
     serialize_only = ('id', 'name', 'email')
 
@@ -26,7 +25,8 @@ class Lesson(db.Model, SerializerMixin):
     #instructor = db.Column(db.String, nullable=False)
 
     coach_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    bookings = db.relationship("Booking", backref="booked_lesson", lazy=True)
+    bookings = db.relationship("Booking", back_populates="lesson", lazy=True)
+    users = db.relationship("User", secondary="bookings",back_populates="lessons", lazy=True)
 
     serialize_only = ('id', 'title', 'description', 'datetime', 'coach_id')
 
@@ -40,7 +40,8 @@ class Booking(db.Model, SerializerMixin):
     lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    lesson = db.relationship("Lesson", backref="bookings_in_lesson")
+    lesson = db.relationship("Lesson", back_populates="bookings")
+    user = db.relationship("User", back_populates="bookings")
 
 
     serialize_only = ('id', 'name', 'email', 'lesson_id','user_id')

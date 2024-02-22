@@ -128,15 +128,5 @@ class Bookings(Resource):
 
 api.add_resource(Bookings, "/bookings", "/bookings/<int:id>", endpoint="bookings")
 
-
-# class UserBooking(Resource):
-   # def get(self, n):
-      #  users = User.query.all()
-      #  user_booking = [user.dict() for user in users if len(user.lessons) >= n ]
-      #  return make_response(user_booking, 200)
-
-#api.add_resource(UserBooking, "/userbooking", "/userbooking/<int:n>")
-
-
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

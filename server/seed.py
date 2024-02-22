@@ -7,39 +7,48 @@ from datetime import datetime, timedelta
 
 fake = Faker()
 
-with app.app_context():
-    # Generate 10 users
-    for _ in range(10):
+def seed_users(n):
+    users = []
+    for _ in range(n):
         user = User(name=fake.unique.name(), email=fake.unique.email())
-        db.session.add(user)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
+        users.append(user)
+    db.session.bulk_save_objects(users)
+    db.session.commit()
 
-    # Get all users
-    users = User.query.all()
-
-    # Generate 50 lessons
-    for _ in range(50):
+def seed_lessons(users, n):
+    lessons = []
+    for _ in range(n):
         lesson = Lesson(
             title=fake.catch_phrase(),
             description=fake.text(),
             datetime=fake.future_datetime(end_date="+30d"),
             coach_id=random.choice(users).id
         )
-        db.session.add(lesson)
+        lessons.append(lesson)
+    db.session.bulk_save_objects(lessons)
     db.session.commit()
 
-    # Get all lessons
+def seed_bookings(lessons, n):
+    bookings = []
+    for _ in range(n):
+        booking = Booking(
+            name=fake.name(),  # Not enforcing uniqueness here
+            email=fake.email(),
+            lesson_id=random.choice(lessons).id,
+            user_id=random.choice(users).id  # Assuming you want to link bookings to users
+        )
+        bookings.append(booking)
+    db.session.bulk_save_objects(bookings)
+    db.session.commit()
+
+with app.app_context():
+    # Seed Users
+    seed_users(10)
+    users = User.query.all()
+
+    # Seed Lessons
+    seed_lessons(users, 50)
     lessons = Lesson.query.all()
 
-    # Generate 200 bookings
-    for _ in range(200):
-        booking = Booking(
-            name=fake.unique.name(),
-            email=fake.unique.email(),
-            lesson_id=random.choice(lessons).id
-        )
-        db.session.add(booking)
-    db.session.commit()
+    # Seed Bookings
+    seed_bookings(lessons, 200)

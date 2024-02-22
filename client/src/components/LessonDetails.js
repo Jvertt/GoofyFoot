@@ -29,7 +29,7 @@ const LessonDetails = ({ lessons }) => {
           coach_id: selectedCoach,
         });
 
-        const response = await axios.post('http://127.0.0.1:5555/bookings', {
+        const response = await axios.post('http://127.0.0.1:5555/lessons', {
           name: values.name,
           email: values.email,
           lesson_id: lesson.id,
