@@ -13,7 +13,8 @@ class User(db.Model, SerializerMixin):
     bookings = db.relationship("Booking", back_populates="user")
     lessons = db.relationship("Lesson", secondary="bookings",back_populates="users", lazy=True)
 
-    serialize_only = ('id', 'name', 'email')
+    #serialize_only = ('id', 'name', 'email')
+    serializ_rules = ('-lessons', '-bookings.lesson', '-bookings.user',)
 
 class Lesson(db.Model, SerializerMixin):
     __tablename__ = "lessons"
