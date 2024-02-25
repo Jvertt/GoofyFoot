@@ -5,7 +5,7 @@
 # Remote library imports
 from flask import request, make_response, jsonify
 from flask_restful import Resource
-from models import User, Lesson, Booking
+from models import User, Lesson, Booking, Category
 
 # Local imports
 from config import app, db, api
@@ -127,6 +127,13 @@ class Bookings(Resource):
         return {"message": "Booking not found"}, 404
 
 api.add_resource(Bookings, "/bookings", "/bookings/<int:id>", endpoint="bookings")
+
+class Categories(Resource):
+    def get(self):
+        categories = [category.to_dict() for category in Category.query.all()]
+        return make_response(jsonify(categories), 200)
+
+api.add_resource(Categories, "/categories", endpoint="categories")
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
