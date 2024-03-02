@@ -5,10 +5,13 @@
 # Remote library imports
 from flask import request, make_response, jsonify
 from flask_restful import Resource
+from flask_cors import CORS
 from models import User, Lesson, Booking, Category
 
 # Local imports
 from config import app, db, api
+
+CORS(app, origins=["http://localhost:4000"])
 
 @app.route("/")
 def index():
@@ -95,7 +98,9 @@ class Bookings(Resource):
         new_booking = Booking(
             name=request.json['name'],
             email=request.json['email'],
-            lesson_id=request.json['lesson_id']
+            lesson_id=request.json['lesson_id'],
+            user_id=request.json.get('user_id'),
+            category_id=request.json.get('category_id')
         )
         db.session.add(new_booking)
         db.session.commit()
