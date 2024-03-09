@@ -8,6 +8,9 @@ const LessonDetails = ({ lessons }) => {
   const { id } = useParams();
   const history = useHistory();
   const lesson = lessons.find(lesson => lesson.id === parseInt(id));
+  const [coaches, setCoaches] = React.useState([]);
+  const [selectedCoach, setSelectedCoach] = React.useState('');
+  const [categoryID, setCategoryID] = React.useState('');
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -19,25 +22,16 @@ const LessonDetails = ({ lessons }) => {
       name: '',
       email: '',
     },
-    validationSchema: validationSchema,
+    validationSchema,
     onSubmit: async values => {
       try {
-        console.log({
-          name: values.name,
-          email: values.email,
-          lesson_id: lesson.id,
-          coach_id: selectedCoach
-        });
-
         const response = await axios.post('http://127.0.0.1:5555/bookings', {
           name: values.name,
           email: values.email,
           lesson_id: lesson.id,
-          coach_id: selectedCoach
+          user_id: selectedCoach,
+          category_id: categoryID
         });
-
-        console.log(response.data);
-
         formik.resetForm();
         history.push('/');
       } catch (error) {
@@ -46,22 +40,16 @@ const LessonDetails = ({ lessons }) => {
     },
   });
 
-  const [coaches, setCoaches] = React.useState([]);
-  const [selectedCoach, setSelectedCoach] = React.useState('');
-
   React.useEffect(() => {
     const fetchCoaches = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:5555/users');
-        setCoaches(response.data);
-        setSelectedCoach(response.data[0].id); // default to the first coach
-      } catch (error) {
-        console.error(error);
+      const response = await axios.get('http://127.0.0.1:5555/users');
+      setCoaches(response.data);
+      if (response.data.length > 0) {
+        setSelectedCoach(response.data[0].id);
       }
     };
-
     fetchCoaches();
-  }, []);
+  }, [id]);
 
   if (!lesson) {
     return <div>Loading...</div>;
@@ -80,7 +68,6 @@ const LessonDetails = ({ lessons }) => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        {formik.touched.name && formik.errors.name && <div className="error">{formik.errors.name}</div>}
         <label>Email:</label>
         <input
           type="email"
@@ -89,7 +76,6 @@ const LessonDetails = ({ lessons }) => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        {formik.touched.email && formik.errors.email && <div className="error">{formik.errors.email}</div>}
         <label>Coach:</label>
         <select value={selectedCoach} onChange={e => setSelectedCoach(e.target.value)}>
           {coaches.map(coach => (
@@ -98,9 +84,14 @@ const LessonDetails = ({ lessons }) => {
             </option>
           ))}
         </select>
+        <label>Category:</label>
+        <select value={categoryID} onChange={e => setCategoryID(e.target.value)}>
+          <option value="">Select Category</option>
+          <option value="1">Surf</option>
+          <option value="2">Paddle Board</option>
+        </select>
         <button type="submit">Book Lesson</button>
       </form>
-      {/* Confirmation Popup */}
     </div>
   );
 };

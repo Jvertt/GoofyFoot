@@ -11,6 +11,7 @@ function ManageBookings() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [bookingToEdit, setBookingToEdit] = useState(null);
     const [bookingToCancel, setBookingToCancel] = useState(null);
+    const [categoryFilter, setCategoryFilter] = useState(''); // State for handling category filter
 
     const fetchBookings = () => {
         axios.get('http://127.0.0.1:5555/bookings')
@@ -30,7 +31,6 @@ function ManageBookings() {
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
             email: Yup.string().email('Invalid email address').required('Email is required'),
-            
         }),
         onSubmit: (values, { setSubmitting }) => {
             axios.put(`http://127.0.0.1:5555/bookings/${bookingToEdit.id}`, values)
@@ -72,6 +72,15 @@ function ManageBookings() {
 
     return (
         <div className="manage-bookings-container">
+            {/* Dropdown for category filter */}
+            <div className="category-filter">
+                <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
+                    <option value="">All Categories</option>
+                    <option value="1">Surf</option>
+                    <option value="2">Paddle Board</option>
+                </select>
+            </div>
+
             {bookingToEdit ? (
                 <form onSubmit={formik.handleSubmit}>
                     <input
@@ -86,12 +95,16 @@ function ManageBookings() {
                         value={formik.values.email}
                         onChange={formik.handleChange}
                     />
-                    {/* Include other fields as necessary */}
                     <button type="submit">Save Changes</button>
                     <button onClick={() => setBookingToEdit(null)}>Cancel</button>
                 </form>
             ) : (
-                bookings.map(booking => (
+                // Filter bookings based on selected category
+                bookings.filter(booking => 
+                    categoryFilter === '' || 
+                    (categoryFilter === '1' && booking.category.name === 'Surf') || 
+                    (categoryFilter === '2' && booking.category.name === 'Paddle Board')
+                ).map(booking => (
                     <div key={booking.id} className="booking-item">
                         <p className="booking-name">{booking.name}</p>
                         <p className="booking-email">{booking.email}</p>
@@ -118,3 +131,4 @@ function ManageBookings() {
 }
 
 export default ManageBookings;
+
