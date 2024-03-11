@@ -1,43 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import '../index.css';
+import { fetchCoaches, addCoach } from './CoachesSlice';
 
 const Coaching = () => {
-  const [coaches, setCoaches] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false); // State to toggle form visibility
+  const dispatch = useDispatch();
+  const coaches = useSelector((state) => state.coaches.items);
+  const status = useSelector((state) => state.coaches.status);
+  const error = useSelector((state) => state.coaches.error);
+  
+  const [showAddForm, setShowAddForm] = React.useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5555/users')
-      .then(response => response.json())
-      .then(data => setCoaches(data));
-  }, []);
+    if (status === 'idle') {
+      dispatch(fetchCoaches());
+    }
+  }, [status, dispatch]);
 
   const initialValues = {
     name: '',
     email: '',
   };
 
-  const validationSchema = Yup.object().shape({
+  const validationSchema = Yup.object({
     name: Yup.string().required('Required'),
     email: Yup.string().email('Invalid email').required('Required'),
   });
 
   const onSubmit = (values, { setSubmitting, resetForm }) => {
-    fetch('http://localhost:5555/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    })
-    .then(response => response.json())
-    .then(data => {
-      setCoaches([...coaches, data]);
+    dispatch(addCoach(values)).then(() => {
       resetForm();
-      setShowAddForm(false); // Hide the form after submission
+      setShowAddForm(false);
       setSubmitting(false);
-    })
-    .catch(error => {
-      console.error('Error:', error);
+    }).catch(() => {
       setSubmitting(false);
     });
   };

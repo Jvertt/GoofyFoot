@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import lessonsReducer from './LessonsSlice';
-import coachesReducer from './coachesSlice';
+import coachesReducer from './CoachesSlice';
 
 const store = configureStore({
     reducer: {
-      lessons: lessonsReducer,
       coaches: coachesReducer,
     },
   });
   
   export default store;
+
+
   
